@@ -4,20 +4,26 @@ import (
 	"github.com/google/uuid"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
 var cvmClient *cvm.Client
+var cbsClient *cbs.Client
 
 func Init() {
 	initConfig()
 
 	credential := common.NewCredential(Conf.Account.SecretId, Conf.Account.SecretKey)
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.Endpoint = Conf.Account.Endpoint
-	client, _ := cvm.NewClient(credential, Conf.Region.Region, cpf)
 
-	cvmClient = client
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = Conf.Account.CVMEndpoint
+	cvmClient, _ = cvm.NewClient(credential, Conf.Region.Region, cpf)
+
+	cpf = profile.NewClientProfile()
+	cpf.HttpProfile.Endpoint = Conf.Account.CBSEndpoint
+	cbsClient, _ = cbs.NewClient(credential, Conf.Region.Region, cpf)
 }
 
 func CreateInstance(imageId string) string {
@@ -152,10 +158,11 @@ func GetImage() cvm.Image {
 	return *response.Response.ImageSet[0]
 }
 
-func DeleteImage(id string) {
-	request := cvm.NewDeleteImagesRequest()
-	request.ImageIds = common.StringPtrs([]string{id})
-	_, err := cvmClient.DeleteImages(request)
+func DeleteSnapshotAndImage(snapshotId string) {
+	request := cbs.NewDeleteSnapshotsRequest()
+	request.SnapshotIds = common.StringPtrs([]string{snapshotId})
+	request.DeleteBindImages = common.BoolPtr(true)
+	_, err := cbsClient.DeleteSnapshots(request)
 	if err != nil {
 		panic(err)
 	}

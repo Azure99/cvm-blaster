@@ -10,9 +10,10 @@ const configFile = "config.json"
 var Conf Config
 
 type Account struct {
-	Endpoint  string
-	SecretId  string
-	SecretKey string
+	CVMEndpoint string
+	CBSEndpoint string
+	SecretId    string
+	SecretKey   string
 }
 
 type Instance struct {
@@ -59,9 +60,10 @@ func initConfig() {
 func getDefaultConfig() Config {
 	return Config{
 		Account: Account{
-			Endpoint:  "cvm.tencentcloudapi.com",
-			SecretId:  "AKIDCH8pKclpgJjvxxxxxxxxxxxxxxxxxxxx",
-			SecretKey: "VmobFfroX1ILxxxxxxxxxxxxxxxxxxxx",
+			CVMEndpoint: "cvm.tencentcloudapi.com",
+			CBSEndpoint: "cbs.tencentcloudapi.com",
+			SecretId:    "AKIDCH8pKclpgJjvxxxxxxxxxxxxxxxxxxxx",
+			SecretKey:   "VmobFfroX1ILxxxxxxxxxxxxxxxxxxxx",
 		},
 		Instance: Instance{
 			Type:           "SA2.MEDIUM4",

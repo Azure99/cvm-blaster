@@ -1,5 +1,7 @@
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.330 h1:XD6JduMSgixVWfikM407+rT5tguKaO6Nn8eq9iy8Vhw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.330/go.mod h1:PTp058qpOV//RukBVdYQT962rZg71lIt6eHLK1zdvEc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330 h1:yPUoeUIxqrrYoKhwYRNIDKpnZ5VIMK3qNwuuB55DZtY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.330/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.330 h1:JuviXzj8cXLYhYErBFe1ZtoBf2NRfrLP9TVeb+jKypI=

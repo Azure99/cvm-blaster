@@ -30,25 +30,27 @@ func main() {
 }
 
 func start() {
-	existId := getInstanceId()
+	existId := *getInstance().InstanceId
 	if existId != "" {
 		println("Instance already created: " + existId)
 		return
 	}
 
-	imageId := getImageId()
-	println("Backup Image id: " + imageId)
-	if imageId != "" && getImageStatus() != "NORMAL" {
-		println("Image not available")
-		return
+	image := getImage()
+	if *image.ImageId != "" {
+		println("Backup Image id: " + *image.ImageId)
+		if *image.ImageState != "NORMAL" {
+			println("Image not available")
+			return
+		}
 	}
 
 	println("Create instance")
-	instanceId := createInstance(imageId)
+	instanceId := createInstance(*image.ImageId)
 
 	for {
 		time.Sleep(3 * time.Second)
-		status := getInstanceStatus()
+		status := *getInstance().InstanceState
 		if status == "RUNNING" {
 			break
 		}
@@ -59,20 +61,20 @@ func start() {
 }
 
 func stop() {
-	instanceId := getInstanceId()
+	instanceId := *getInstance().InstanceId
 	if instanceId == "" {
 		println("Instance not exist")
 		return
 	}
 
-	oldImageId := getImageId()
+	oldImage := getImage()
 
 	println("Create Backup Image")
 	imageId := createImage(instanceId)
 
 	for {
 		time.Sleep(5 * time.Second)
-		status := getImageStatus()
+		status := *getImage().ImageState
 		if status == "NORMAL" {
 			break
 		}
@@ -80,9 +82,10 @@ func stop() {
 	}
 	println("Image created: " + imageId)
 
-	if oldImageId != "" {
-		println("Delete old image: " + oldImageId)
-		deleteImage(oldImageId)
+	if *oldImage.ImageId != "" {
+		snapshotId := *oldImage.SnapshotSet[0].SnapshotId
+		println("Delete old image and snapshot: " + snapshotId)
+		deleteSnapshotAndImage(snapshotId)
 	}
 
 	println("Delete instance: " + instanceId)
@@ -109,14 +112,6 @@ func createInstance(imageId string) string {
 	return client.CreateInstance(imageId)
 }
 
-func getInstanceId() string {
-	return *client.GetInstance().InstanceId
-}
-
-func getInstanceStatus() string {
-	return *client.GetInstance().InstanceState
-}
-
 func getInstance() cvm.Instance {
 	return client.GetInstance()
 }
@@ -125,20 +120,16 @@ func deleteInstance(instanceId string) {
 	client.DeleteInstance(instanceId)
 }
 
-func getImageId() string {
-	return *client.GetImage().ImageId
-}
-
-func getImageStatus() string {
-	return *client.GetImage().ImageState
-}
-
 func createImage(instanceId string) string {
 	return client.CreateImage(instanceId)
 }
 
-func deleteImage(imageId string) {
-	client.DeleteImage(imageId)
+func getImage() cvm.Image {
+	return client.GetImage()
+}
+
+func deleteSnapshotAndImage(snapshotId string) {
+	client.DeleteSnapshotAndImage(snapshotId)
 }
 
 func printInstanceInfo(instance cvm.Instance) {
