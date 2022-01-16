@@ -51,10 +51,10 @@ func CreateInstance(imageId string) string {
 	}
 	request.InstanceCount = common.Int64Ptr(1)
 	request.InstanceName = common.StringPtr(Conf.Instance.Name)
+	request.LoginSettings = &cvm.LoginSettings{
+		Password: common.StringPtr(Conf.Instance.LoginPassword),
+	}
 	if imageId == "" {
-		request.LoginSettings = &cvm.LoginSettings{
-			Password: common.StringPtr(Conf.Instance.LoginPassword),
-		}
 		imageId = Conf.Instance.DefaultImageId
 	}
 	request.ImageId = common.StringPtr(imageId)
