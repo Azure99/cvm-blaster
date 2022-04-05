@@ -29,6 +29,12 @@ type Network struct {
 	SecureGroup string
 }
 
+type Service struct {
+	Monitor    bool
+	Security   bool
+	Automation bool
+}
+
 type Region struct {
 	Region string
 	Zone   string
@@ -38,6 +44,7 @@ type Config struct {
 	Account  Account
 	Instance Instance
 	Network  Network
+	Service  Service
 	Region   Region
 }
 
@@ -75,6 +82,11 @@ func getDefaultConfig() Config {
 			VPC:         "vpc-xxxxxxxx",
 			SubNet:      "subnet-xxxxxxxx",
 			SecureGroup: "sg-xxxxxxxx",
+		},
+		Service: Service{
+			Monitor:    true,
+			Security:   true,
+			Automation: true,
 		},
 		Region: Region{
 			Region: "ap-beijing",

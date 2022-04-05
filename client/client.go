@@ -51,23 +51,24 @@ func CreateInstance(imageId string) string {
 	}
 	request.InstanceCount = common.Int64Ptr(1)
 	request.InstanceName = common.StringPtr(Conf.Instance.Name)
-	request.LoginSettings = &cvm.LoginSettings{
-		Password: common.StringPtr(Conf.Instance.LoginPassword),
-	}
+	request.LoginSettings = &cvm.LoginSettings{}
 	if imageId == "" {
 		imageId = Conf.Instance.DefaultImageId
+		request.LoginSettings.Password = common.StringPtr(Conf.Instance.LoginPassword)
+	} else {
+		request.LoginSettings.KeepImageLogin = common.StringPtr("TRUE")
 	}
 	request.ImageId = common.StringPtr(imageId)
 	request.SecurityGroupIds = common.StringPtrs([]string{Conf.Network.SecureGroup})
 	request.EnhancedService = &cvm.EnhancedService{
 		SecurityService: &cvm.RunSecurityServiceEnabled{
-			Enabled: common.BoolPtr(true),
+			Enabled: common.BoolPtr(Conf.Service.Security),
 		},
 		MonitorService: &cvm.RunMonitorServiceEnabled{
-			Enabled: common.BoolPtr(true),
+			Enabled: common.BoolPtr(Conf.Service.Monitor),
 		},
 		AutomationService: &cvm.RunAutomationServiceEnabled{
-			Enabled: common.BoolPtr(true),
+			Enabled: common.BoolPtr(Conf.Service.Automation),
 		},
 	}
 	request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{
@@ -103,9 +104,8 @@ func GetInstance() cvm.Instance {
 	}
 
 	if len(response.Response.InstanceSet) == 0 {
-		instanceId := ""
 		return cvm.Instance{
-			InstanceId: &instanceId,
+			InstanceId: common.StringPtr(""),
 		}
 	}
 
@@ -150,9 +150,8 @@ func GetImage() cvm.Image {
 	}
 
 	if len(response.Response.ImageSet) == 0 {
-		imageId := ""
 		return cvm.Image{
-			ImageId: &imageId,
+			ImageId: common.StringPtr(""),
 		}
 	}
 	return *response.Response.ImageSet[0]
