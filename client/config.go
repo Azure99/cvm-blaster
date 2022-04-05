@@ -27,6 +27,7 @@ type Network struct {
 	VPC         string
 	SubNet      string
 	SecureGroup string
+	PrivateIp   string
 }
 
 type Service struct {
@@ -82,6 +83,7 @@ func getDefaultConfig() Config {
 			VPC:         "vpc-xxxxxxxx",
 			SubNet:      "subnet-xxxxxxxx",
 			SecureGroup: "sg-xxxxxxxx",
+			PrivateIp:   "",
 		},
 		Service: Service{
 			Monitor:    true,

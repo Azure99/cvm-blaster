@@ -38,11 +38,16 @@ func CreateInstance(imageId string) string {
 		DiskType: common.StringPtr("CLOUD_PREMIUM"),
 		DiskSize: common.Int64Ptr(50),
 	}
+	var privateIp []string
+	if Conf.Network.PrivateIp != "" {
+		privateIp = append(privateIp, Conf.Network.PrivateIp)
+	}
 	request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{
-		VpcId:            common.StringPtr(Conf.Network.VPC),
-		SubnetId:         common.StringPtr(Conf.Network.SubNet),
-		AsVpcGateway:     common.BoolPtr(false),
-		Ipv6AddressCount: common.Uint64Ptr(0),
+		VpcId:              common.StringPtr(Conf.Network.VPC),
+		SubnetId:           common.StringPtr(Conf.Network.SubNet),
+		AsVpcGateway:       common.BoolPtr(false),
+		Ipv6AddressCount:   common.Uint64Ptr(0),
+		PrivateIpAddresses: common.StringPtrs(privateIp),
 	}
 	request.InternetAccessible = &cvm.InternetAccessible{
 		InternetChargeType:      common.StringPtr("TRAFFIC_POSTPAID_BY_HOUR"),
